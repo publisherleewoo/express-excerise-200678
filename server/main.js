@@ -13,8 +13,8 @@ import session from "express-session";
 import api from "./routes";
 
 const app = express();
-const port = 3000;
-const devPort = 4000;
+const port = 4000;
+const devPort = 5000;
 
 app.use("/", express.static(path.join(__dirname, "./../public")));
 app.use(morgan("dev"));

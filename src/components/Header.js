@@ -5,15 +5,15 @@ class Header extends React.Component {
     render() {
         const loginButton = (
             <li>
-                <a href="#none">
+                <Link to="/login">
                     <i className="material-icons">vpn_key</i>
-                </a>
+                </Link>
             </li>
         );
 
         const logoutButton = (
             <li>
-                <a href="#none">
+                <a href="#none" onClick={this.props.onLogout}>
                     <i className="material-icons">lock_open</i>
                 </a>
             </li>
