@@ -3,9 +3,10 @@ module.exports = function (app, fs) {
         res.render("index", {
             title: "MY HOMEPAGE",
             length: 5,
+            name: req.session.name,
+            username: req.session.username,
         });
     });
-
     app.get("/list", function (req, res) {
         fs.readFile(__dirname + "/../data/" + "user.json", "utf8", function (
             err,
@@ -131,5 +132,50 @@ module.exports = function (app, fs) {
                 }
             );
         });
+    });
+    app.get("/login/:username/:password", function (req, res) {
+        fs.readFile(__dirname + "/../data/user.json", "utf8", function (
+            err,
+            data
+        ) {
+            var users = JSON.parse(data);
+            var username = req.params.username;
+            var password = req.params.password;
+            var result = {};
+            if (!users[username]) {
+                // USERNAME NOT FOUND
+                result["success"] = 0;
+                result["error"] = "not found";
+                res.json(result);
+                return;
+            }
+
+            if (users[username]["password"] == password) {
+                result["success"] = 1;
+                req.session.username = username; //세션 적용
+                req.session.name = users[username]["name"]; //세션 적용
+                res.json(result);
+            } else {
+                result["success"] = 0;
+                result["error"] = "incorrect";
+                res.json(result);
+            }
+        });
+    });
+
+    app.get("/logout", function (req, res) {
+        if (req.session.username) {
+            //세션확인후
+            req.session.destroy(function (err) {
+                //세션파괴
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.redirect("/");
+                }
+            });
+        } else {
+            res.redirect("/");
+        }
     });
 };
